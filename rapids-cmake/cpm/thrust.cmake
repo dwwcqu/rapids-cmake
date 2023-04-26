@@ -1,5 +1,5 @@
 #=============================================================================
-# Copyright (c) 2021, NVIDIA CORPORATION.
+# Copyright (c) 2021-2023, NVIDIA CORPORATION.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -55,6 +55,11 @@ Result Variables
 # cmake-lint: disable=R0915
 function(rapids_cpm_thrust NAMESPACE namespaces_name)
   list(APPEND CMAKE_MESSAGE_CONTEXT "rapids.cpm.thrust")
+
+  # Add libcudacxx so that Thrust picks up the rapids-cmake version rather than the libcudacxx
+  # submodule bundled with Thrust.
+  include("${rapids-cmake-dir}/cpm/libcudacxx.cmake")
+  rapids_cpm_libcudacxx(${_RAPIDS_UNPARSED_ARGUMENTS})
 
   set(to_install OFF)
   if(INSTALL_EXPORT_SET IN_LIST ARGN)
