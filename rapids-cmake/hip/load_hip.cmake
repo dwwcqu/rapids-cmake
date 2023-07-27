@@ -145,12 +145,6 @@ else()
 endif()
 
 
-if(NOT DEFINED ENV{RAPIDS_ROCM_ARCH})
-  set(RAPIDS_ROCM_ARCH gfx900;gfx906;gfx916;gfx908;gfx90a;gfx1030)
-else()
-  set(RAPIDS_ROCM_ARCH $ENV{RAPIDS_ROCM_ARCH})
-endif()
-
 # Add HIP to the CMAKE Module Path
 set(CMAKE_MODULE_PATH ${HIP_PATH}/cmake ${CMAKE_MODULE_PATH})
 
@@ -160,7 +154,7 @@ macro(find_package_and_print_version PACKAGE_NAME)
 endmacro()
 
 # Find the HIP Package
-find_package_and_print_version(HIP 1.0)
+find_package_and_print_version(hip)
 
 if(HIP_FOUND)
   set(RAPIDS_FOUND_HIP TRUE)

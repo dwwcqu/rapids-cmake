@@ -2,3 +2,4 @@
 ## created by dwwcqu
 include_guard(GLOBAL)
 include(${CMAKE_CURRENT_LIST_DIR}/hip/load_hip.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/hip/set_architecture.cmake)
