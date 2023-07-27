@@ -46,8 +46,8 @@ files to be generated.
 function(rapids_test_generate_resource_spec DESTINATION filepath)
   list(APPEND CMAKE_MESSAGE_CONTEXT "rapids.test.generate_resource_spec")
 
-  if(NOT DEFINED CMAKE_CUDA_COMPILER AND NOT DEFINED CMAKE_CXX_COMPILER)
-    message(FATAL_ERROR "rapids_test_generate_resource_spec Requires the CUDA or C++ language to be enabled."
+  if(NOT DEFINED CMAKE_HIP_COMPILER AND NOT DEFINED CMAKE_CXX_COMPILER)
+    message(FATAL_ERROR "rapids_test_generate_resource_spec Requires the HIP or C++ language to be enabled."
     )
   endif()
 
@@ -67,14 +67,14 @@ function(rapids_test_generate_resource_spec DESTINATION filepath)
   set(error_file ${PROJECT_BINARY_DIR}/rapids-cmake/detect_gpus.stderr.log)
 
   if(NOT EXISTS "${eval_exe}")
-    find_package(CUDAToolkit REQUIRED)
     file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/rapids-cmake/")
-
-    set(compile_options "-I${CUDAToolkit_INCLUDE_DIRS}")
-    set(link_options ${CUDA_cudart_LIBRARY})
-    set(compiler "${CMAKE_CXX_COMPILER}")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "clang")
+      set(compiler "${CMAKE_CXX_COMPILER}")
+    endif()
     if(NOT DEFINED CMAKE_CXX_COMPILER)
-      set(compiler "${CMAKE_CUDA_COMPILER}")
+      find_package(hip REQUIRED)
+      set(compile_options ${hip_INCLUDE_DIR})
+      set(compiler "/opt/rocm/bin/hipcc")
     endif()
 
     execute_process(COMMAND "${compiler}" "${eval_file}" ${compile_options} ${link_options} -o

@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-#include <cuda_runtime_api.h>
+#include <hip/hip_runtime_api.h>
 
 #include <iostream>
 #include <string>
 #include <vector>
 
 struct version {
-  int major = 1;
-  int minor = 0;
+public:
+  version(int ma, int mi) : major_(ma), minor_(mi) {}
+  int major_ = 1;
+  int minor_ = 0;
 };
 
 struct gpu {
   gpu(int i) : id{i} {};
-  gpu(int i, const cudaDeviceProp& prop) : id{i}, memory{prop.totalGlobalMem}, slots{100} {}
+  gpu(int i, const hipDeviceProp_t& prop) : id{i}, memory{prop.totalGlobalMem}, slots{100} {}
   int id        = 0;
   size_t memory = 0;
   int slots     = 0;
@@ -37,7 +39,7 @@ struct gpu {
 // https://cmake.org/cmake/help/latest/manual/ctest.1.html#resource-specification-file
 void to_json(std::ostream& buffer, version const& v)
 {
-  buffer << "\"version\": {\"major\": " << v.major << ", \"minor\": " << v.minor << "}";
+  buffer << "\"version\": {\"major\": " << v.major_ << ", \"minor\": " << v.minor_ << "}";
 }
 void to_json(std::ostream& buffer, gpu const& g)
 {
@@ -48,13 +50,13 @@ int main()
 {
   std::vector<gpu> gpus;
   int nDevices = 0;
-  cudaGetDeviceCount(&nDevices);
+  hipGetDeviceCount(&nDevices);
   if (nDevices == 0) {
     gpus.emplace_back(0);
   } else {
     for (int i = 0; i < nDevices; ++i) {
-      cudaDeviceProp prop;
-      cudaGetDeviceProperties(&prop, i);
+      hipDeviceProp_t prop;
+      hipGetDeviceProperties(&prop, i);
       gpus.emplace_back(i, prop);
     }
   }
