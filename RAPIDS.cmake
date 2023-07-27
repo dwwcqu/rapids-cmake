@@ -20,19 +20,20 @@
 # Allow users to control which version is used
 if(NOT rapids-cmake-version)
   # Define a default version if the user doesn't set one
-  set(rapids-cmake-version 23.04)
+  set(rapids-cmake-version v23.04.00)
 endif()
 
 # Allow users to control which GitHub repo is fetched
 if(NOT rapids-cmake-repo)
   # Define a default repo if the user doesn't set one
-  set(rapids-cmake-repo rapidsai/rapids-cmake)
+  # set to my GitHub repo
+  set(rapids-cmake-repo dwwcqu/rapids-cmake)
 endif()
 
 # Allow users to control which branch is fetched
 if(NOT rapids-cmake-branch)
   # Define a default branch if the user doesn't set one
-  set(rapids-cmake-branch "branch-${rapids-cmake-version}")
+  set(rapids-cmake-branch "port/${rapids-cmake-version}")
 endif()
 
 # Allow users to control the exact URL passed to FetchContent
