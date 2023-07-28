@@ -72,7 +72,6 @@ function(rapids_test_generate_resource_spec DESTINATION filepath)
       set(compiler "${CMAKE_CXX_COMPILER}")
     else()
       find_package(hip REQUIRED)
-      set(compile_options ${hip_INCLUDE_DIRS})
       find_program(HIPCC hipcc PATHS "/opt/rocm/hip/bin/" PATHS "/opt/rocm/bin/" REQUIRED)
       if(HIPCC STREQUAL "")
 		    message(FATAL_ERROR "hipcc cannot found")
@@ -80,7 +79,7 @@ function(rapids_test_generate_resource_spec DESTINATION filepath)
       set(compiler ${HIPCC})
     endif()
 
-    execute_process(COMMAND "${compiler}" "${eval_file}" ${compile_options} ${link_options} -o
+    execute_process(COMMAND "${compiler}" "${eval_file}" -o
                             "${eval_exe}" OUTPUT_VARIABLE compile_output
                     ERROR_VARIABLE compile_output COMMAND_ECHO STDOUT)
   endif()
